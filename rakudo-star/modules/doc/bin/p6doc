@@ -1,0 +1,95 @@
+#!/usr/bin/env perl6
+
+# die with printing a backtrace
+my class X::P6doc is Exception {
+    has $.message;
+    multi method gist(X::P6doc:D:) {
+        self.message;
+    }
+}
+
+constant DEBUG = %*ENV<P6DOC_DEBUG>;
+sub findbin() returns Str {
+    $*PROGRAM_NAME.subst(rx{<-[/\\]>+$}, '');
+}
+
+sub tempfile() {
+    my $tempfile = %*ENV<TEMP> // %*ENV<TMP> // '/tmp';
+    $tempfile ~= '/';
+    $tempfile ~= join '', ('a'..'z', 0..9).roll(5);
+    $tempfile ~= '.tmp';
+    nextsame if $tempfile.IO.e;
+    return $tempfile;
+}
+
+sub search-paths() {
+    findbin()  ~ '../doc/perl6/lib/',
+    findbin()  ~ '../lib/',
+    @*INC.map({ /\/$/ ?? $_ !! $_ ~ '/' });
+}
+
+sub module-names(Str $modulename) {
+    $modulename.split('::').join('/')
+        X~ '.pm', '.pm6', '.pod';
+}
+
+sub locate-module(Str $modulename) {
+    my $m = (search-paths() X~ module-names($modulename)).first: *.IO.f;
+    unless $m.defined {
+        my $message = join "\n",
+            "Cannot locate $modulename in any of the following paths:",
+            search-paths.map({"  $_"});
+        X::P6doc.new(:$message).throw;
+    }
+    return $m;
+}
+
+sub show-docs(Str $path, :$section) {
+   my $pager = %*ENV<PAGER> // ($*OS eq 'MSWin32' ?? 'more' !! 'less');
+   if not open($path).lines.grep( /^\=/ )  {
+      say "No POD found in $path";
+      return;
+   }
+   if $section.defined {
+       %*ENV<PERL6_POD_HEADING> = $section;
+      my $i = findbin() ~ '../lib';
+       say "launching '$*EXECUTABLE_NAME -I$i --doc=SectionFilter $path | $pager'" if DEBUG;
+       shell "$*EXECUTABLE_NAME -I$i --doc=SectionFilter $path | $pager";
+   }
+   else {
+       shell "$*EXECUTABLE_NAME --doc $path | $pager";
+   }
+
+}
+
+multi sub MAIN() {
+    say 'What documentation do you want to read?';
+    say "Examples: $*PROGRAM_NAME Str";
+    say "          $*PROGRAM_NAME Str.split";
+}
+
+multi sub MAIN($docee) {
+    return MAIN($docee, :f) if defined $docee.index('.') ;
+    if 'index.data'.IO ~~ :e {
+        my %data = eval slurp 'index.data';
+        if %data{$docee} {
+            my $newdoc = %data{$docee}[0][0] ~ "." ~ %data{$docee}[0][1];
+            return MAIN($newdoc, :f);
+        }
+    }
+    show-docs(locate-module($docee));
+}
+
+multi sub MAIN($docee, Bool :$f!) {
+    my ($package, $method) = $docee.split('.');
+    unless $method {
+        say 'unqualified sub and method names are not yet implemented';
+        say 'For example use "p6doc -f Str.split" instead of "p6doc -f split" for now';
+        exit 2;
+    }
+    my $m = locate-module($package);
+    show-docs($m, :section($method));
+}
+
+
+# vim: ft=perl6

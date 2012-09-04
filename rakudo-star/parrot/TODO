@@ -1,0 +1,9 @@
+
+All todo items should have a corresponding github issue. See the current list:
+
+ https://github.com/parrot/parrot/issues?labels=todo
+
+To open a new todo ticket, use
+
+ https://github.com/parrot/parrot/issues/new
+

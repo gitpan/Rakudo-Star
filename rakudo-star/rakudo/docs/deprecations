@@ -1,0 +1,14 @@
+Deprecations in 2012.08
+
+    Parameters preceeded by a | or \ may not have a sigil anymore.
+        sub f(\$x) { say $x }
+    must be changed to 
+        sub f(\x) { say x }
+    Usage of \$x will unconditionally warn in 2012.09 and be removed in 2012.10
+
+    IO::Path.dir (which returns the directory part of the path)
+    has been renamed to IO::Path.directory.
+    IO::Path.dir will be removed or re-purposed in 2012.09
+
+    The LAZY statement prefix will be removed in 2012.09. It was a non-specced
+    experiment and did not work out well.

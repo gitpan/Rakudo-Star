@@ -1,0 +1,199 @@
+=begin pod
+
+=TITLE Perl 6 variables
+
+Variable names start with a special character called a I<sigil>, followed
+optionally by a second special character named I<twigil>, and then an
+I<identifer>.
+
+=head1 Sigils
+
+The sigil serves both as rough type constraint, and as an indicator
+as to whether the contents of the variable flatten in list context. See also
+the documentation in L<List>.
+
+=begin table
+
+    Sigil   Type constraint          Default type  Flattens  Assignment
+    =====   ===============          ============  ========  ==========
+    $       Mu (no type constraint)  Any           No        item
+    &       Callable                 Callable      No        item
+    @       Positional               Array         Yes       list
+    %       Associative              Hash          Yes       list
+
+=end table
+
+Examples:
+
+    my $square = 9 ** 2;
+    my @array  = 1, 2, 3;   # Array-variable with three elements
+    my %hash   = London => 'UK', Berlin => 'Germany';
+
+There are two types of assignment, I<item assignment> and I<list assignment>.
+Both use the equal sign C<=> as operator. The distinction whether an C<=>
+means item or list assignment is based on the syntax of the left-hand side.
+(TODO: explain in detail, or do that in L<operators>).
+
+Item assignment places the value from the right-hand side into the variable
+(container) on the left.
+
+List assignment leaves the choice of what to do to the variable on the left.
+
+For example L<Array> variables (C<@> sigil) empty themselves on list assignment, and then
+put all the values from the right-hand side into themselves. Contrary to item
+assignment, it means that the type of the variable on the left always stays
+C<Array>, regardless of the type of the right-hand side.
+
+Note that the item assignment has tighter precedence than list assigment, and
+also tighter than the comma. See L<operators> for more details.
+
+=head1 Twigils
+
+Twigils influence the scoping of a variable
+
+=begin table
+
+    Twigil  Scope
+    ======  =====
+    *       dynamic
+    !       attribute (class member)
+    ?       compile-time "constant"
+    .       method (not really a variable)
+    <       index into match object (not really a variable)
+
+=end table
+
+=head2 *
+
+Dynamic variables are looked up through the caller, not through the outer
+scope.
+
+    my $l  = 23;
+    my $*d = 23;
+
+    sub f() {
+        say $l;     # 23
+        say $*d;    # 42
+    }
+
+    {
+        my $l  = 42;
+        my $*d = 42;
+        f();
+    }
+
+
+=head1 Special Variables
+
+=head2 Often-Used Variables
+
+# TODO: find a better heading
+
+There are three special variables that are available in every block:
+
+=begin table
+
+    Variable    Meaning
+
+    $_          topic variable
+    $/          regex match
+    $!          exceptions
+
+=end table
+
+=head3 $_
+
+C<$_> is the topic variable. It is the default parameter for blocks that do
+not have an explicit signature, so constructs like C<for @array { ... }>
+and C<given $var { ... }> binds to C<$_> simply by invoking the block.
+
+    for <a b c> { say $_ }  # sets $_ to 'a', 'b' and 'c' in turn
+    say $_ for <a b c>;     # same, even though it's not a block
+    given 'a'   { say $_ }  # sets $_ to 'a'
+    say $_ given 'a';       # same, even though it's not a block
+
+C<CATCH> blocks set C<$_> to the exception that was caught. The C<~~>
+smart-match operator sets C<$_> on the right-hand side expression to the
+value of the left-hand side.
+
+Calling a method on C<$_> can be shortened by leaving off the variable name:
+
+    .say;                   # same as $_.say
+
+C<m/regex/> and C</regex/> regex matches and C<s/regex/subst/> substitutions
+work on C<$_>.
+
+=head3 $/
+
+C<$/> is the match variable. It stores the result of each regex match, and
+usually contains objects of type L<Match>.
+
+    'abc 12' ~~ /\w+/;  # sets $/ to a Match object
+    say $/.Str;         # abc
+
+The C<Grammar.parse> method also sets the caller's C<$/> to the resulting
+L<Match> object.
+
+Other match variables are aliases to elements of C<$/>:
+
+    $0          # same as $/[0]
+    $1          # same as $/[1]
+    $<named>    # same as $/<named>
+
+=head3 $!
+
+C<$!> is the error variable. If a C<try> block or statement prefix catches
+an exception, that exception is stored in C<$!>. If no exception was caught,
+C<$!> is set to the C<Any> type object.
+
+Note that C<CATCH> blocks I<do not> set C<$!>. Rather they set C<$_> inside
+the block to the caught exception.
+
+=head2 Compile-time "constants"
+
+    $?FILE      Which file am I in?
+    $?LINE      Which line am I at?
+    &?ROUTINE   Which routine am I in?
+    &?BLOCK     Which block am I in?
+    %?LANG      What is the current set of interwoven languages?
+
+Other compile-time constants:
+
+    $?KERNEL    Which kernel am I compiled for?
+    $?DISTRO    Which OS distribution am I compiling under
+    $?VM        Which virtual machine am I compiling under
+    $?XVM       Which virtual machine am I cross-compiling for
+    $?PERL      Which Perl am I compiled for?
+    $?SCOPE     Which lexical scope am I in?
+    $?PACKAGE   Which package am I in?
+    $?MODULE    Which module am I in?
+    $?CLASS     Which class am I in? (as variable)
+    $?ROLE      Which role am I in? (as variable)
+    $?GRAMMAR   Which grammar am I in?
+    $?TABSTOP   ???
+    $?USAGE
+    $?ENC
+
+=head2 Dynamic variables
+
+    $*ARGFILES  Magic command-line input handle
+    @*ARGS      Arguments from the command line
+    $*IN        Standard input filehandle
+    $*OUT       Standard output filehandle
+    $*ERR       Standard error filehandle
+    $*TZ
+    $*FATAL
+    X<$*CWD>      The Current Working Directory
+
+=head2 Other variables
+
+    X<$*PROGRAM_NAME> Path to the current executable as it was typed in on the command line,
+                   or C<-e> if perl was invoked with the -e flag.
+
+    X<$*PID>   Process ID of the current process.
+    X<$*OS>    Which Operating System am I compiling under (e.g. linux)
+    X<$*OSVER> Version of the current Operating System
+    X<$*EXECUTABLE_NAME> The name of the perl executable that is currently running
+
+=end pod
+

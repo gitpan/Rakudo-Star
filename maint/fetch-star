@@ -1,0 +1,11 @@
+#!/bin/sh
+
+STAR=$(perl -Ilib -MRakudo::Star -e'print substr(Rakudo::Star->VERSION,0,7)')
+
+STARTAR=rakudo-star-$STAR
+
+wget https://github.com/downloads/rakudo/star/$STARTAR.tar.gz -O - | tar xzf -
+
+rm -rf rakudo-star
+
+mv $STARTAR rakudo-star

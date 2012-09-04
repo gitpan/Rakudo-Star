@@ -1,0 +1,7 @@
+{
+    "name"          : "DBIish",
+    "version"       : "*",
+    "description"   : "Database connectivity for Perl 6",
+    "depends"       : ["NativeCall"],
+    "source-url"    : "git://github.com/perl6/DBIish.git"
+}

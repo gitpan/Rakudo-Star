@@ -1,0 +1,77 @@
+=begin pod
+
+=TITLE class Match
+
+    class Match is Capture is Cool { ... }
+
+C<Match> objects are the result of a successful regex match. They store
+a reference to the original string (C<.orig>), positional and
+named captures, the positions of the start and end of the match 
+in the original string, and a payload referred to as I<AST> 
+(abstract syntax tree), which can be used to build data structures 
+from complex regexes and gramamrs.
+
+Submatches are also C<Match> objects (or lists of C<Match> objects,
+if the corresponding regex was quantified), so each match object
+can be seen as the root of a tree of match objects.
+
+=head1 Methods
+
+=head2 orig
+
+Returns the original string that the regex was matched against.
+
+=head2 from
+
+Returns the index of the starting position of the match.
+
+=head2 to
+
+Returns the index of the end position of the match.
+
+=head2 ast
+
+Returns the AST (ie payload).
+
+=head2 Str
+
+Returns the matched text.
+
+=head2 caps
+
+Returns a list of pairs, with the index or submatch name as key and
+the submatches as values. The list is ordered by starting position
+of the submatches.
+
+=head2 chunks
+
+Returns a list of pairs, with the index or submatch name as key and
+the submatches as values. The list is ordered by starting position
+of the submatches.
+
+Those parts of the string that were not matched by submatches are
+interleaved with the other pairs, with the string C<~> as key.
+
+=head2 list
+
+Returns a list of positional submatches.
+
+=head2 hash
+
+Returns a hash of named submatches.
+
+=head2 prematch
+
+Returns the part of the original string leading up to the match.
+
+=head2 postmatch
+
+Returns the part of the original string following the match.
+
+=head2 make
+
+    method make(Match:D: Mu $ast)
+
+Sets the AST to C<$ast>, and returns it.
+
+=end pod

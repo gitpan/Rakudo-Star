@@ -1,0 +1,26 @@
+/*
+Copyright (C) 2009, Parrot Foundation.
+
+check that Dl_info is available
+*/
+
+#include <execinfo.h>
+#ifndef __USE_GNU
+#  define __USE_GNU
+#endif
+#include <dlfcn.h>
+#include <stdlib.h>
+
+int
+main(int argc, char **argv)
+{
+    Dl_info frameInfo;
+    return EXIT_SUCCESS;
+}
+
+/*
+ * Local variables:
+ *   c-file-style: "parrot"
+ * End:
+ * vim: expandtab shiftwidth=4 cinoptions='\:2=2' :
+ */

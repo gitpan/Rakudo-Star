@@ -1,0 +1,174 @@
+#!/usr/bin/env perl6
+
+# This is the template for the entire generated Makefile.
+sub makefile_template() {
+    return q{
+.PHONY: all build test install clean distclean purge
+
+PERL6  = $binary
+PREFIX = $(HOME)/.perl6
+BLIB   = blib
+P6LIB  = $(PWD)/$(BLIB)/lib:$(PWD)/lib:$(PERL6LIB)
+CP     = cp -p
+MKDIR  = mkdir -p
+
+$scripts
+$blib_pirs
+
+all build: $(BLIB_PIRS)
+
+$build_rules
+
+test: build
+	env PERL6LIB=$(P6LIB) prove -e '$(PERL6)' -r t/
+
+loudtest: build
+	env PERL6LIB=$(P6LIB) prove -ve '$(PERL6)' -r t/
+
+timetest: build
+	env PERL6LIB=$(P6LIB) PERL6_TEST_TIMES=1 prove -ve '$(PERL6)' -r t/
+
+install: $(BLIB_PIRS)
+$install_rules
+
+clean:
+	rm -fr $(BLIB)
+
+distclean purge: clean
+	rm -r Makefile
+}
+
+}
+
+sub MAIN($filename = 'Makefile', Bool :$alpha) {
+    my $binary = $alpha ?? 'alpha' !! 'perl6';
+    if $alpha {
+        note "Using 'alpha' as the Perl 6 binary. Please upgrade your code.";
+    }
+
+    my @modules = get_modules();
+    my @pods    = get_pods();
+    my $scripts = get_scripts();
+
+    my $blib_pirs = join ' ', 'BLIB_PIRS =', @modules>>.blib-pir;
+    my $build_rules = join "\n", @modules>>.buildrule;
+
+    my $makefile = $filename eq '-' ?? $*OUT !! open $filename, :w;
+    my $install_rules = join '', @modules>>.install-rule;
+	if $scripts {
+		$install_rules ~= "\t\$(MKDIR) \$(PREFIX)/bin\n"
+						~ "\t\$(CP) \$(SCRIPTS) \$(PREFIX)/bin\n";
+	}
+    for @pods {
+        my $dir         = .subst(rx{<-[/]>+$}, '');
+        $install_rules ~= "\t\$(MKDIR) \$(PREFIX)/$dir\n";
+        $install_rules ~= "\t\$(CP) $_ \$(PREFIX)/$dir\n";
+    }
+
+    $makefile.print(
+        makefile_template()\
+            .subst(/^\n/, '')\
+            .subst('$binary', $binary)\
+            .subst('$blib_pirs', $blib_pirs)\
+            .subst('$build_rules', $build_rules)\
+            .subst('$install_rules', $install_rules)\
+            .subst('$scripts', $scripts)
+    );
+    $makefile.close;
+}
+
+sub get_scripts() {
+    if 'bin'.IO ~~ :d {
+       return 'SCRIPTS= ' ~ qx[echo bin/*].chomp;
+    }
+	return '';
+}
+
+class Module {
+    has $.lib-pm;
+    has @.dependencies is rw;
+    method name     { path-to-module-name($.lib-pm) }
+    method lib-dir  { $.lib-pm.subst(rx{<-[/]>+$}, '') }
+    method blib-pm  { q[$(BLIB)/] ~ $.lib-pm }
+    method blib-pir { $.blib-pm.subst(rx/\.pm6?$/, '.pir') }
+    method blib-dir { $.blib-pm.subst(rx{<-[/]>+$}, '') }
+    method buildrule {
+        my $header  = join(' ', $.blib-pir, ':', $.lib-pm, @.dependencies.map: *.blib-pir);
+        my $mkdir   = q[$(MKDIR) ] ~ $.blib-dir;
+        my $copy    = join ' ', '$(CP)', $.lib-pm, $.blib-pm;
+        my $compile = "PERL6LIB=\$(P6LIB) \$(PERL6) --target=pir --output=$.blib-pir $.lib-pm";
+        return "$header\n\t$mkdir\n\t$copy\n\t$compile\n";
+    }
+
+    method install-pir { '$(PREFIX)/' ~  $.lib-pm.subst(rx/\.pm6?$/, '.pir') }
+    method install-pm  { '$(PREFIX)/' ~  $.lib-pm }
+    method install-rule {
+        my $rule =join '',
+            map { "\t$_\n" },
+            '$(MKDIR) $(PREFIX)/' ~ $.lib-dir,
+            '$(CP) ' ~ $.blib-pm  ~ ' ' ~ $.install-pm,
+            '$(CP) ' ~ $.blib-pir ~ ' ' ~ $.install-pir;
+    }
+}
+
+sub get_pods() {
+    find-file-by-ext(<lib6 lib>, 'pod');
+}
+
+sub get_modules() {
+    # The grep is needed because 'find' prints a final newline, so there'll be an
+    # empty-string element at the end of the list.
+
+    my @module-files = find-file-by-ext(<lib lib6>, <pm pm6>);
+    my @modules = @module-files.map: {Module.new(lib-pm => $_)};
+    my %modules-by-name = @modules>>.name Z @modules;
+    for @modules {
+        .dependencies.push: %modules-by-name{ dependencies(.lib-pm) }.grep: *.defined
+    }
+    return @modules;
+}
+
+sub dependencies($filename) {
+    my @deps;
+    my $fh = open($filename, :r);
+    gather for $fh.lines() {
+        if /^\s* ['use'|'need'] \s+ (\w+ ['::' \w+]*)/ && $0 -> $used {
+            next if $used eq 'v6';
+            next if $used eq 'MONKEY_TYPING';
+            next if $used eq 'fatal';
+
+            take ~$used;
+        }
+    }
+}
+
+# Internally, we treat the module names as module names, '::' and all.
+# But since they're really files externally, they have to be converted
+# from paths to module names, and back again.
+
+sub path-to-module-name($path) {
+    $path.subst(/^'lib/'/, '').subst(/^'lib6/'/, '').subst(/\.pm6?$/, '').subst('/', '::', :g);
+}
+
+sub find-file-by-ext(@dirs, *@ext) {
+    my $ext-re = @ext.join('|');
+    my $f = rx/\. <{ $ext-re }> $ /; # RAKUDO: should just be \. @ext $
+    gather for @dirs {
+        dirwalk($_, :$f, :fx(&take)) if .IO.d;
+    }
+}
+
+sub dirwalk(Str $dir = '.', Mu :$d = none(<. ..>), Mu :$f = *, :&dx = -> $ {}, :&fx = -> $ {}) {
+    for dir($dir, :test(*)) -> $p {
+        when $p.f {
+            fx($p.path) if $p.path ~~ $f
+        }
+        when $p.d {
+            dirwalk($p.path, :$d, :$f, :&dx, :&fx)
+                if $p.basename ~~ $d;
+        }
+    }
+    dx($dir) if $dir ~~ $d;
+}
+
+# vim: ft=perl6

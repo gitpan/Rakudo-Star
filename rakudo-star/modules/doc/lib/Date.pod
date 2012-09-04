@@ -1,0 +1,138 @@
+=begin pod
+
+=TITLE class Date
+
+    class Date { }
+
+A C<Date> is an immutable object identifying a day in the Gregorian calendar.
+
+Date objects support addition and subtraction of integers, where an
+integer is interpreted as the number of days. You can compare Date objects
+with the numeric comparison operators C<< ==, <, <=, >, >=, != >>.
+Their stringification in C<YYYY-MM-DD> format means that comparing them
+with the string operators C<eq, lt, le> etc. also gives the right result.
+
+C<Date.today> creates
+an object the current day according to the system clock.
+
+    my $d = Date.new(2012, 12, 24); # Christmas Eve!
+    say $d;                         # 2012-12-24
+    say $d.year;                    # 2012
+    say $d.month;                   # 12
+    say $d.day;                     # 24
+    say $d.day-of-week;             # 1  (that's Monday)
+    my $n = Date.new('2012-12-31'); # New Year's Eve
+    say $n - $d;                    # 7
+    say $n + 1;                     # 2013-01-01
+
+
+=head1 Methods
+
+=head2 new
+
+    proto method new() {*}
+    multi method new($year,   $month,  $day)          returns Date:D
+    multi method new(:$year!, :$month = 1, :$day = 1) returns Date:D
+    multi method new(Str $date)                       returns Date:D
+    multi method new(DateTime:D $dt)                  returns Date:D
+
+Creates a new C<Date> object, either from a tripple of (year, month, day)
+integers, or from a string of the form C<YYYY-MM-DD>
+(L<ISO 8601|http://en.wikipedia.org/wiki/ISO_8601>), or from a DateTime
+object.
+
+=head2 today
+
+    method today() returns Date:D
+
+Returns a C<Date> object for the current day.
+
+=head2 year
+
+    method year(Date:D:) returns Int:D
+
+Returns the year of the date
+
+=head2 month
+
+    method month(Date:D:) returns Int:D
+
+Returns the month of the date (1..12)
+
+=head2 day
+
+    method day(Date:D:) returns Int:D
+
+Returns the day of the month of the date (1..31)
+
+=head2 day-of-week
+
+    method day-of-week(Date:D:) returns Int:D
+
+Returns the day of the week, where 0 is Sunday, 1 is Monday etc.
+
+=head2 day-of-year
+
+    method day-of-year(Date:D:) returns Int:D
+
+Returns the day of the year (1..366).
+
+=head2 day-of-month
+
+    method day-of-month(Date:D:) returns Int:D
+
+Returns the day of the month of the date (1..31). Synonymous to the C<day>
+method.
+
+=head2 truncated-to
+
+    method truncated-to(Date:D: :$year, :$month, :$week)
+
+Returns a C<Date> truncated to the first day of its year, month or week.
+For example
+
+    my $c = Date.new('2012-12-24');
+    say $c.truncated-to(:year);     # 2012-01-01
+    say $c.truncated-to(:month);    # 2012-12-01
+    say $c.truncated-to(:week);     # 2012-12-24  (because it's Monday already) 
+
+=head2 succ
+
+    method succ(Date:D:) returns Date:D
+
+Returns the following day
+
+=head2 days-in-month
+
+    method days-in-month(year = self.year, month = self.month) returns Int:D
+
+Returns the number of days in a month, where year and month default to that
+of the invocant. If both year and month are provided, it can be called as
+a class method.
+
+=head2 is-leap-year
+
+    method is-leap-year($year = self.year) returns Bool:D
+
+Returns C<True> if C<$year> is a leap year. Can be called as a class method
+if the year is provided.
+
+=head2 prev
+
+    method prev(Date:D:) return Date:D
+
+Returns the previous day
+
+=head2 Str
+
+    multi method Str(Date:D:) returns Str:D
+
+Returns the date in C<YYYY-MM-DD> format (L<ISO 8601|http://en.wikipedia.org/wiki/ISO_8601>)
+
+=head2 gist
+
+    multi method gist(Date:D:) returns Str:D
+
+Returns the date in C<YYYY-MM-DD> format (L<ISO 8601|http://en.wikipedia.org/wiki/ISO_8601>)
+
+=end pod
