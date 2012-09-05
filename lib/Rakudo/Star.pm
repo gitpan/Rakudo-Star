@@ -1,6 +1,6 @@
 package Rakudo::Star;
 
-our $VERSION = '2012.08_000';
+our $VERSION = '2012.08_001';
 
 $VERSION = eval $VERSION;
 

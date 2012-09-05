@@ -10,7 +10,7 @@ WriteMakefile(
 
 sub MY::postamble { <<'END' }
 
-INSTALLRAKUDO=$(INSTALLARCHLIB)/Rakudo/Star/Install
+INSTALLRAKUDO=$(INSTALLSITEARCH)/Rakudo/Star/Install
 
 all :: rakudo
 	touch blib/arch/auto/Rakudo-Star/force-arch
