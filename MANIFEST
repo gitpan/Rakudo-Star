@@ -1,8 +1,11 @@
+Changes
 lib/Rakudo/Star.pm
 lib/Rakudo/Star/Paths.pm
 maint/fetch-star
+maint/Makefile.PL.include
 Makefile.PL
 MANIFEST			This list of files
+rakudo-star/.gitignore
 rakudo-star/.gitmodules
 rakudo-star/Configure.pl
 rakudo-star/docs/announce/2010.07
@@ -45,6 +48,7 @@ rakudo-star/modules/Bailador/t/02-response-status.t
 rakudo-star/modules/Bailador/t/03-response-content.t
 rakudo-star/modules/Bailador/t/04-templates.t
 rakudo-star/modules/Bailador/t/views/simple.tt
+rakudo-star/modules/DBIish/.gitignore
 rakudo-star/modules/DBIish/CREDITS
 rakudo-star/modules/DBIish/lib/DBDish.pm6
 rakudo-star/modules/DBIish/lib/DBDish/mysql.pm6
@@ -52,6 +56,7 @@ rakudo-star/modules/DBIish/lib/DBDish/Pg.pm6
 rakudo-star/modules/DBIish/lib/DBDish/SQLite.pm6
 rakudo-star/modules/DBIish/lib/DBDish/TestMock.pm6
 rakudo-star/modules/DBIish/lib/DBIish.pm6
+rakudo-star/modules/DBIish/Makefile
 rakudo-star/modules/DBIish/META.info
 rakudo-star/modules/DBIish/README
 rakudo-star/modules/DBIish/t/05-mock.t
@@ -61,6 +66,7 @@ rakudo-star/modules/DBIish/t/30-Pg.t
 rakudo-star/modules/DBIish/t/35-Pg-common.t
 rakudo-star/modules/DBIish/t/40-sqlite-common.t
 rakudo-star/modules/DBIish/t/99-common.pl6
+rakudo-star/modules/doc/.gitignore
 rakudo-star/modules/doc/bin/p6doc
 rakudo-star/modules/doc/CREDITS
 rakudo-star/modules/doc/html/css/custom-theme/images/ui-bg_flat_0_888888_40x100.png
@@ -247,6 +253,7 @@ rakudo-star/modules/grammar-debugger/README.markdown
 rakudo-star/modules/Grammar-Profiler-Simple/lib/Grammar/Profiler/Simple.pm
 rakudo-star/modules/Grammar-Profiler-Simple/META.info
 rakudo-star/modules/Grammar-Profiler-Simple/README.markdown
+rakudo-star/modules/json/.gitignore
 rakudo-star/modules/json/lib/JSON/Tiny.pm
 rakudo-star/modules/json/lib/JSON/Tiny/Actions.pm
 rakudo-star/modules/json/lib/JSON/Tiny/Grammar.pm
@@ -267,6 +274,7 @@ rakudo-star/modules/jsonrpc/META.info
 rakudo-star/modules/jsonrpc/README.md
 rakudo-star/modules/jsonrpc/t/client.t
 rakudo-star/modules/jsonrpc/t/server.t
+rakudo-star/modules/Math-Model/.gitignore
 rakudo-star/modules/Math-Model/deps.proto
 rakudo-star/modules/Math-Model/examples/angle-throw.pl
 rakudo-star/modules/Math-Model/examples/free-fall.pl
@@ -286,6 +294,7 @@ rakudo-star/modules/Math-RungeKutta/META.info
 rakudo-star/modules/Math-RungeKutta/README
 rakudo-star/modules/Math-RungeKutta/t/01-rk-integrate.t
 rakudo-star/modules/MODULES.txt
+rakudo-star/modules/panda/.gitignore
 rakudo-star/modules/panda/bin/panda
 rakudo-star/modules/panda/bootstrap.pl
 rakudo-star/modules/panda/ext/File__Tools/lib/File/Find.pm
@@ -300,6 +309,7 @@ rakudo-star/modules/panda/ext/File__Tools/t/dir1/file.bar
 rakudo-star/modules/panda/ext/File__Tools/t/dir1/file.foo
 rakudo-star/modules/panda/ext/File__Tools/t/dir1/foodir/not_a_dir
 rakudo-star/modules/panda/ext/File__Tools/t/test.file
+rakudo-star/modules/panda/ext/JSON__Tiny/.gitignore
 rakudo-star/modules/panda/ext/JSON__Tiny/lib/JSON/Tiny.pm
 rakudo-star/modules/panda/ext/JSON__Tiny/lib/JSON/Tiny/Actions.pm
 rakudo-star/modules/panda/ext/JSON__Tiny/lib/JSON/Tiny/Grammar.pm
@@ -342,6 +352,9 @@ rakudo-star/modules/panda/t/panda/installer.t
 rakudo-star/modules/panda/t/panda/tester.t
 rakudo-star/modules/panda/t/stubs.t
 rakudo-star/modules/panda/testmodules/compiled__module/bin/bar
+rakudo-star/modules/panda/testmodules/compiled__module/blib/lib/bar.pod
+rakudo-star/modules/panda/testmodules/compiled__module/blib/lib/foo.pir
+rakudo-star/modules/panda/testmodules/compiled__module/blib/lib/foo.pm
 rakudo-star/modules/panda/testmodules/compiled__module/doc/bardir/barfile
 rakudo-star/modules/panda/testmodules/compiled__module/doc/foofile
 rakudo-star/modules/panda/testmodules/dummymodule/lib/foo.pm
@@ -349,6 +362,7 @@ rakudo-star/modules/panda/testmodules/dummymodule/lib/manual.pod
 rakudo-star/modules/panda/testmodules/testme1/t/win.t
 rakudo-star/modules/panda/testmodules/testme2/t/fail.t
 rakudo-star/modules/panda/TODO
+rakudo-star/modules/perl6-digest-md5/.gitignore
 rakudo-star/modules/perl6-digest-md5/lib/Digest/MD5.pm
 rakudo-star/modules/perl6-digest-md5/META.info
 rakudo-star/modules/perl6-digest-md5/old-tests/test.p6
@@ -371,16 +385,19 @@ rakudo-star/modules/perl6-File-Tools/t/dir1/file.bar
 rakudo-star/modules/perl6-File-Tools/t/dir1/file.foo
 rakudo-star/modules/perl6-File-Tools/t/dir1/foodir/not_a_dir
 rakudo-star/modules/perl6-File-Tools/t/test.file
+rakudo-star/modules/perl6-http-easy/.gitignore
 rakudo-star/modules/perl6-http-easy/examples/test.p6
 rakudo-star/modules/perl6-http-easy/lib/HTTP/Easy.pm6
 rakudo-star/modules/perl6-http-easy/lib/HTTP/Easy/PSGI.pm6
 rakudo-star/modules/perl6-http-easy/META.info
 rakudo-star/modules/perl6-http-easy/README
 rakudo-star/modules/perl6-http-easy/TODO
+rakudo-star/modules/perl6-http-status/.gitignore
 rakudo-star/modules/perl6-http-status/lib/HTTP/Status.pm6
 rakudo-star/modules/perl6-http-status/META.info
 rakudo-star/modules/perl6-http-status/README
 rakudo-star/modules/perl6-http-status/t/01-basic.t
+rakudo-star/modules/perl6-lwp-simple/.gitignore
 rakudo-star/modules/perl6-lwp-simple/bin/lwp-download.pl
 rakudo-star/modules/perl6-lwp-simple/bin/lwp-get.pl
 rakudo-star/modules/perl6-lwp-simple/lib/LWP/Simple.pm
@@ -398,6 +415,7 @@ rakudo-star/modules/perl6-lwp-simple/t/getstore.t
 rakudo-star/modules/perl6-lwp-simple/t/parse-url.t
 rakudo-star/modules/perl6-lwp-simple/t/socket-sanity.t
 rakudo-star/modules/perl6-lwp-simple/t/stringify-headers.t
+rakudo-star/modules/Perl6-MIME-Base64/.gitignore
 rakudo-star/modules/Perl6-MIME-Base64/lib/MIME/Base64.pm6
 rakudo-star/modules/Perl6-MIME-Base64/META.info
 rakudo-star/modules/Perl6-MIME-Base64/README
@@ -410,10 +428,13 @@ rakudo-star/modules/perl6-Term-ANSIColor/README
 rakudo-star/modules/perl6-Term-ANSIColor/t/00-load.t
 rakudo-star/modules/Pod-To-HTML/lib/Pod/To/HTML.pm
 rakudo-star/modules/Pod-To-HTML/META.info
+rakudo-star/modules/rakudo-debugger/.gitignore
 rakudo-star/modules/rakudo-debugger/bin/perl6-debug.nqp
 rakudo-star/modules/rakudo-debugger/lib/Debugger/UI/CommandLine.pm
+rakudo-star/modules/rakudo-debugger/Makefile
 rakudo-star/modules/rakudo-debugger/README.markdown
 rakudo-star/modules/rakudo-debugger/TODO
+rakudo-star/modules/svg-plot/.gitignore
 rakudo-star/modules/svg-plot/AUTHORS
 rakudo-star/modules/svg-plot/deps.proto
 rakudo-star/modules/svg-plot/examples/circle.pl
@@ -448,6 +469,7 @@ rakudo-star/modules/test-mock/README
 rakudo-star/modules/test-mock/t/returning.t
 rakudo-star/modules/test-mock/t/synopsis.t
 rakudo-star/modules/test-mock/t/with.t
+rakudo-star/modules/ufo/.gitignore
 rakudo-star/modules/ufo/bin/ufo
 rakudo-star/modules/ufo/META.info
 rakudo-star/modules/ufo/README
@@ -466,6 +488,7 @@ rakudo-star/modules/uri/t/01.t
 rakudo-star/modules/uri/t/escape.t
 rakudo-star/modules/uri/t/november-urlencoded.t
 rakudo-star/modules/uri/t/rfc-3986-examples.t
+rakudo-star/modules/xml-writer/.gitignore
 rakudo-star/modules/xml-writer/AUTHORS
 rakudo-star/modules/xml-writer/lib/XML/Writer.pm
 rakudo-star/modules/xml-writer/LICENSE
@@ -475,6 +498,7 @@ rakudo-star/modules/xml-writer/svg-example
 rakudo-star/modules/xml-writer/t/escaping.t
 rakudo-star/modules/xml-writer/t/structure.t
 rakudo-star/modules/xml-writer/TODO
+rakudo-star/modules/zavolaj/.gitignore
 rakudo-star/modules/zavolaj/examples/biggishint.c
 rakudo-star/modules/zavolaj/examples/biggishint.h
 rakudo-star/modules/zavolaj/examples/biggishint.pl6
@@ -504,6 +528,7 @@ rakudo-star/modules/zavolaj/t/08-callbacks.c
 rakudo-star/modules/zavolaj/t/08-callbacks.t
 rakudo-star/modules/zavolaj/t/CompileTestLib.pm
 rakudo-star/modules/zavolaj/TODO
+rakudo-star/nqp/.gitignore
 rakudo-star/nqp/3rdparty/dyncall/AUTHORS
 rakudo-star/nqp/3rdparty/dyncall/autovar/autovar_ABI.h
 rakudo-star/nqp/3rdparty/dyncall/autovar/autovar_ARCH.h
@@ -1197,6 +1222,7 @@ rakudo-star/nqp/tools/build/Makefile.in
 rakudo-star/nqp/tools/build/PARROT_REVISION
 rakudo-star/nqp/tools/lib/NQP/Configure.pm
 rakudo-star/nqp/VERSION
+rakudo-star/parrot/.gitignore
 rakudo-star/parrot/.travis.yml
 rakudo-star/parrot/api.yaml
 rakudo-star/parrot/ChangeLog
@@ -1700,10 +1726,12 @@ rakudo-star/parrot/examples/c/nanoparrot.c
 rakudo-star/parrot/examples/c/pbc_info.c
 rakudo-star/parrot/examples/c/test_main.c
 rakudo-star/parrot/examples/compilers/japhc.c
+rakudo-star/parrot/examples/compilers/Makefile
 rakudo-star/parrot/examples/config/file/configcompiler
 rakudo-star/parrot/examples/config/file/configverbose
 rakudo-star/parrot/examples/config/file/configwithfatalstep
 rakudo-star/parrot/examples/embed/cotorra.c
+rakudo-star/parrot/examples/embed/Makefile
 rakudo-star/parrot/examples/embed/Makefile.msvc
 rakudo-star/parrot/examples/io/get.pir
 rakudo-star/parrot/examples/io/http.pir
@@ -1930,6 +1958,7 @@ rakudo-star/parrot/examples/tge/branch/lib/Branch.pir
 rakudo-star/parrot/examples/tge/branch/lib/Leaf.pir
 rakudo-star/parrot/examples/tge/branch/transform.pir
 rakudo-star/parrot/examples/tge/README.pod
+rakudo-star/parrot/examples/tools/Makefile
 rakudo-star/parrot/examples/tools/pbc_checker.cpp
 rakudo-star/parrot/examples/tools/pgegrep
 rakudo-star/parrot/examples/tutorial/00_README.pod
@@ -3406,6 +3435,8 @@ rakudo-star/ports/darwin_dmg/HOW_TO_INSTALL.txt
 rakudo-star/ports/darwin_dmg/package_darwin_dmg.pl
 rakudo-star/ports/darwin_dmg/README
 rakudo-star/ports/darwin_dmg/SLA_rakudo_star.template.r
+rakudo-star/rakudo/blib/Perl6/.gitignore
+rakudo-star/rakudo/blib/QPerl6/.gitignore
 rakudo-star/rakudo/Configure.pl
 rakudo-star/rakudo/CREDITS
 rakudo-star/rakudo/docs/announce/2009-02
@@ -3575,6 +3606,7 @@ rakudo-star/rakudo/src/core/WhateverCode.pm
 rakudo-star/rakudo/src/core/you_are_here.pm
 rakudo-star/rakudo/src/gen/README
 rakudo-star/rakudo/src/main.nqp
+rakudo-star/rakudo/src/ops/.gitignore
 rakudo-star/rakudo/src/ops/perl6.ops
 rakudo-star/rakudo/src/Perl6/Actions.pm
 rakudo-star/rakudo/src/Perl6/Compiler.nqp
@@ -3628,6 +3660,7 @@ rakudo-star/rakudo/src/Perl6/Ops.pm
 rakudo-star/rakudo/src/Perl6/Optimizer.pm
 rakudo-star/rakudo/src/Perl6/Pod.pm
 rakudo-star/rakudo/src/Perl6/World.pm
+rakudo-star/rakudo/src/pmc/.gitignore
 rakudo-star/rakudo/src/pmc/ctmthunk.pmc
 rakudo-star/rakudo/src/pmc/mdthunk.pmc
 rakudo-star/rakudo/src/pmc/perl6lexinfo.pmc
@@ -4585,9 +4618,6 @@ rakudo-star/tools/build/modules-test.pl
 rakudo-star/tools/build/star-product.wxs
 rakudo-star/tools/lib/NQP/Configure.pm
 t/rakudo.t
-rakudo-star/parrot/.gitignore
-rakudo-star/parrot/examples/compilers/Makefile
-rakudo-star/parrot/examples/embed/Makefile
-rakudo-star/parrot/examples/tools/Makefile
 META.yml                                 Module YAML meta-data (added by MakeMaker)
 META.json                                Module JSON meta-data (added by MakeMaker)
+README                                   README file (added by Distar)

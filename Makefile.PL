@@ -2,6 +2,8 @@ use strict;
 use warnings FATAL => 'all';
 use ExtUtils::MakeMaker;
 
+(do 'maint/Makefile.PL.include' or die $@) unless -f 'META.yml';
+
 WriteMakefile(
   NAME => 'Rakudo-Star',
   VERSION_FROM => 'lib/Rakudo/Star.pm',
@@ -25,12 +27,4 @@ install :: rakudoinstall
 
 rakudoinstall :
 	cd rakudo-star; make install
-
-manifest :
-	rm MANIFEST
-	$(PERL) "-MExtUtils::Manifest=mkmanifest" -e mkmanifest
-	echo "rakudo-star/parrot/.gitignore" >>MANIFEST
-	echo "rakudo-star/parrot/examples/compilers/Makefile" >>MANIFEST
-	echo "rakudo-star/parrot/examples/embed/Makefile" >>MANIFEST
-	echo "rakudo-star/parrot/examples/tools/Makefile" >>MANIFEST
 END

@@ -1,12 +1,12 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "install Rakudo Star from CPAN",
    "author" : [
       "mst - Matt S. Trout (cpan:MSTROUT) <mst@shadowcat.co.uk>"
    ],
    "dynamic_config" : 1,
    "generated_by" : "ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.120921",
    "license" : [
-      "unknown"
+      "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -34,6 +34,6 @@
          "requires" : {}
       }
    },
-   "release_status" : "testing",
-   "version" : "2012.08_001"
+   "release_status" : "stable",
+   "version" : "2012.08002"
 }

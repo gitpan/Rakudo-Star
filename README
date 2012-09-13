@@ -1,0 +1,36 @@
+NAME
+    Rakudo::Star - install Rakudo Star from CPAN
+
+SYNOPSIS
+    This module is here as a version container - see Rakudo::Star::Paths for
+    documentation of how to find the install.
+
+DESCRIPTION
+    Basically, this module convinces MakeMaker to build a bundled version of
+    <http://rakudo.org>'s "Star" release, then provides a way to find it on
+    disk.
+
+    Note that since parrot is not relocatable, the rakudo install is not
+    relocatable - so putting it in a local::lib dir and then "mv"-ing that
+    directory is not going to work yet. Sorry.
+
+AUTHORS OF RAKUDO
+    See <http://rakudo.org> for the Rakudo project. The following author,
+    copyright and license information applies only to the Rakudo::Star
+    installation code.
+
+AUTHOR
+    mst - Matt S. Trout (cpan:MSTROUT) <mst@shadowcat.co.uk>
+
+CONTRIBUTORS
+    None yet, because nobody's broken it yet. I'm sure they will shortly.
+
+COPYRIGHT
+    Copyright (c) 2012 the Rakudo::Star "AUTHOR" and "CONTRIBUTORS" as
+    listed above.
+
+LICENSE
+    This library is free software and may be distributed under the same
+    terms as perl itself; for the licensing of rakudo, please see
+    <http://rakudo.org>
+
